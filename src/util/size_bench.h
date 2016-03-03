@@ -12,11 +12,18 @@ public:
 	{
 		m_total_size = 0;
 		m_second_size = 0;
-		m_total_watch.Start();
-		m_second_watch.Start();
 	}
+	
 	~CSizeBench()
 	{
+	}
+	
+	void Start()
+	{
+		m_total_size = 0;
+		m_second_size = 0;
+		m_total_watch.Start();
+		m_second_watch.Start();
 	}
 
 	void Increment(int size)

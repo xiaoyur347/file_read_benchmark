@@ -2,6 +2,7 @@
 #define BENCHMARK_SINGLE_THREAD_READ_TEST_H
 
 #include "test.h"
+#include "util/size_bench.h"
 
 class CSingleThreadReadTest : public ITest
 {
@@ -20,8 +21,9 @@ public:
 private:
 	std::vector<IFile *> m_filelist;
 	int m_blocksize;
-	void *m_block;
 	int m_count;
+	bool m_bRunning;
+	CSizeBench m_bench;
 };
 
 #endif // BENCHMARK_SINGLE_THREAD_READ_TEST_H
