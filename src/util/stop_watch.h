@@ -2,6 +2,7 @@
 #define BENCHMARK_STOP_WATCH_H
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <sys/time.h>
 
 class CStopWatch
