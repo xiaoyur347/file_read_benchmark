@@ -1,6 +1,7 @@
 #include "single_thread_read_test.h"
 #include "read_file.h"
 #include "file.h"
+#include <stdlib.h>
 
 void AddUnbufferFile(const std::string &strLine, void *arg)
 {
@@ -10,9 +11,18 @@ void AddUnbufferFile(const std::string &strLine, void *arg)
 	pvec->push_back(file);
 }
 
+void AddBufferFile(const std::string &strLine, void *arg)
+{
+	std::vector<IFile *> * pvec = (std::vector<IFile *> *)arg;
+	IFile *file = new CBufferFile();
+	file->Open(strLine.c_str());
+	pvec->push_back(file);
+}
+
 static void InitFileList(std::vector<IFile *> &filelist, const char *resource)
 {
-	ReadFileFunc(resource,AddUnbufferFile,&filelist);
+	//ReadFileFunc(resource,AddUnbufferFile,&filelist);
+	ReadFileFunc(resource,AddBufferFile,&filelist);
 }
 
 int main(int argc, char *argv[])
@@ -21,6 +31,10 @@ int main(int argc, char *argv[])
 	std::vector<IFile *> filelist;
 	InitFileList(filelist, argv[1]);
 	test.SetFileList(filelist);
+	if (argc > 2)
+	{
+		test.SetCount(atoi(argv[2]));
+	}
 	test.Run();
 	return 0;
 }
