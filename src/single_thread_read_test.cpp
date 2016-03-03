@@ -3,7 +3,8 @@
 
 CSingleThreadReadTest::CSingleThreadReadTest()
 	:m_blocksize(0),
-	 m_block(NULL)
+	 m_block(NULL),
+	 m_count(-1)
 {
 	SetBlockSize(32768);
 }
@@ -30,6 +31,11 @@ void CSingleThreadReadTest::SetBlockSize(int blocksize)
 	}
 }
 
+void CSingleThreadReadTest::SetCount(int count)
+{
+	m_count = count;
+}
+
 void CSingleThreadReadTest::SetFileList(std::vector<IFile *> & filelist)
 {
 	m_filelist = filelist;
@@ -37,12 +43,26 @@ void CSingleThreadReadTest::SetFileList(std::vector<IFile *> & filelist)
 
 void CSingleThreadReadTest::Run()
 {
-	for (std::vector<IFile *>::iterator it = m_filelist.begin();
-		it != m_filelist.end();
-		++it)
+	bool success = true;
+	while (success)
 	{
-		
-		(*it)->Read(m_block, m_blocksize);
+		int count = 0;
+		for (std::vector<IFile *>::iterator it = m_filelist.begin();
+			it != m_filelist.end();
+			++it)
+		{
+			if (m_count > 0 && count >= m_count)
+			{
+				break;
+			}
+			count++;
+			int ret = (*it)->Read(m_block, m_blocksize);
+			if (ret <= 0)
+			{
+				success = false;
+				break;
+			}
+		}
 	}
 }
 

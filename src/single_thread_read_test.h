@@ -16,10 +16,12 @@ public:
 	void Run();
 
 	void SetBlockSize(int blocksize);
+	void SetCount(int count);
 private:
 	std::vector<IFile *> m_filelist;
 	int m_blocksize;
 	void *m_block;
+	int m_count;
 };
 
 #endif // BENCHMARK_SINGLE_THREAD_READ_TEST_H

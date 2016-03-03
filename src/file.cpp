@@ -1,8 +1,14 @@
+#define _LARGEFILE64_SOURCE	1
+#define _FILE_OFFSET_BITS	64
 #include "file.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
 
 CUnbufferFile::CUnbufferFile()
 	:m_fd(-1)
@@ -23,6 +29,8 @@ bool CUnbufferFile::Open(const char *path)
 	int ret = open(path, O_RDONLY, S_IRUSR);
 	if (ret < 0)
 	{
+		int err = errno;
+		printf("open fail %d %s\n", err,strerror(err));
 		return false;
 	}
 	m_fd = ret;
