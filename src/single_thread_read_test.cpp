@@ -1,4 +1,5 @@
 #include "single_thread_read_test.h"
+#include "util/size_bench.h"
 #include <stdlib.h>
 
 CSingleThreadReadTest::CSingleThreadReadTest()
@@ -44,6 +45,7 @@ void CSingleThreadReadTest::SetFileList(std::vector<IFile *> & filelist)
 void CSingleThreadReadTest::Run()
 {
 	bool success = true;
+	CSizeBench bench;
 	while (success)
 	{
 		int count = 0;
@@ -61,6 +63,10 @@ void CSingleThreadReadTest::Run()
 			{
 				success = false;
 				break;
+			}
+			else
+			{
+				bench.Increment(ret);
 			}
 		}
 	}
