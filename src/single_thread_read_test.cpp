@@ -1,0 +1,48 @@
+#include "single_thread_read_test.h"
+#include <stdlib.h>
+
+CSingleThreadReadTest::CSingleThreadReadTest()
+	:m_blocksize(0),
+	 m_block(NULL)
+{
+	SetBlockSize(32768);
+}
+
+CSingleThreadReadTest::~CSingleThreadReadTest()
+{
+	if (m_block != NULL)
+	{
+		free(m_block);
+		m_block = NULL;
+	}
+}
+
+void CSingleThreadReadTest::SetBlockSize(int blocksize)
+{
+	if (m_blocksize != blocksize)
+	{
+		m_blocksize = blocksize;
+		if (m_block != NULL)
+		{
+			free(m_block);
+		}
+		m_block = malloc(m_blocksize);
+	}
+}
+
+void CSingleThreadReadTest::SetFileList(std::vector<IFile *> & filelist)
+{
+	m_filelist = filelist;
+}
+
+void CSingleThreadReadTest::Run()
+{
+	for (std::vector<IFile *>::iterator it = m_filelist.begin();
+		it != m_filelist.end();
+		++it)
+	{
+		
+		(*it)->Read(m_block, m_blocksize);
+	}
+}
+
