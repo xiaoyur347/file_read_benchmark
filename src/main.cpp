@@ -49,6 +49,10 @@ int main(int argc, char *argv[])
 	{
 		test.SetFileCount(atoi(argv[2]));
 	}
+	if (argc > 3)
+	{
+		test.SetLimitSize(atoi(argv[3])*1024);
+	}
 	test.Run();
 	return 0;
 }

@@ -94,6 +94,7 @@ void CLimitReadTest::ThreadRun(IFile *file)
 			m_bench.Increment(ret);
 			bench.Increment(ret);
 			total_size += ret;
+			sched_yield();
 		}
 	}
 	if (block != NULL)
