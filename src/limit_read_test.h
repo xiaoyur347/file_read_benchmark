@@ -17,19 +17,25 @@ public:
 		return "limit";
 	}
 	void SetFileList(std::vector<IFile *> & filelist);
-	void Run();
-
+	void SetFileCount(int count);
 	void SetBlockSize(int blocksize);
 	void SetLimitSize(int limitsize);
-	void SetCount(int count);
+	void Run();
+	void Stop();
 private:
 	void ThreadRun(IFile *file);
+	void WaitStart();
+	void NotifyStart();
+	void WaitStop();
+	void NotifyStop();
+	
 	std::vector<IFile *> m_filelist;
-	std::vector<std::thread *> m_threadlist;
+	int m_filecount;
 	int m_blocksize;
+	
+	std::vector<std::thread *> m_threadlist;
 	int m_limitsize;
-	int m_count;
-	bool m_bRunning;
+	bool m_running;
 	CSizeBench m_bench;
 	std::mutex m_mutex;
 	std::condition_variable m_start_cond;

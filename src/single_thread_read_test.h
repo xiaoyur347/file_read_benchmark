@@ -14,15 +14,16 @@ public:
 		return "single";
 	}
 	void SetFileList(std::vector<IFile *> & filelist);
-	void Run();
-
+	void SetFileCount(int count);
 	void SetBlockSize(int blocksize);
-	void SetCount(int count);
+	void Run();
+	void Stop();
 private:
 	std::vector<IFile *> m_filelist;
+	int m_filecount;
 	int m_blocksize;
-	int m_count;
-	bool m_bRunning;
+	
+	bool m_running;
 	CSizeBench m_bench;
 };
 

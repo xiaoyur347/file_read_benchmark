@@ -2,11 +2,10 @@
 #include <stdlib.h>
 
 CSingleThreadReadTest::CSingleThreadReadTest()
-	:m_blocksize(0),
-	 m_count(-1),
-	 m_bRunning(false)
+	:m_filecount(-1),
+	 m_blocksize(DEFAULT_BLOCK_SIZE),
+	 m_running(false)
 {
-	SetBlockSize(32768);
 }
 
 CSingleThreadReadTest::~CSingleThreadReadTest()
@@ -15,15 +14,12 @@ CSingleThreadReadTest::~CSingleThreadReadTest()
 
 void CSingleThreadReadTest::SetBlockSize(int blocksize)
 {
-	if (m_blocksize != blocksize)
-	{
-		m_blocksize = blocksize;
-	}
+	m_blocksize = blocksize;
 }
 
-void CSingleThreadReadTest::SetCount(int count)
+void CSingleThreadReadTest::SetFileCount(int count)
 {
-	m_count = count;
+	m_filecount = count;
 }
 
 void CSingleThreadReadTest::SetFileList(std::vector<IFile *> & filelist)
@@ -34,16 +30,16 @@ void CSingleThreadReadTest::SetFileList(std::vector<IFile *> & filelist)
 void CSingleThreadReadTest::Run()
 {
 	void *block = malloc(m_blocksize);
-	m_bRunning = true;
+	m_running = true;
 	m_bench.Start();
-	while (m_bRunning)
+	while (m_running)
 	{
 		int count = 0;
 		for (std::vector<IFile *>::iterator it = m_filelist.begin();
 			it != m_filelist.end();
 			++it)
 		{
-			if (m_count > 0 && count >= m_count)
+			if (m_filecount > 0 && count >= m_filecount)
 			{
 				break;
 			}
@@ -51,7 +47,7 @@ void CSingleThreadReadTest::Run()
 			int ret = (*it)->Read(block, m_blocksize);
 			if (ret <= 0)
 			{
-				m_bRunning = false;
+				m_running = false;
 				break;
 			}
 			else
@@ -64,5 +60,10 @@ void CSingleThreadReadTest::Run()
 	{
 		free(block);
 	}
+}
+
+void CSingleThreadReadTest::Stop()
+{
+	m_running = false;
 }
 

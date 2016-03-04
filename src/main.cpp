@@ -1,7 +1,10 @@
 #include "single_thread_read_test.h"
+#include "multi_thread_read_test.h"
+#include "limit_read_test.h"
 #include "read_file.h"
 #include "util/file.h"
 #include <stdlib.h>
+#include <signal.h>
 
 void AddUnbufferFile(const std::string &strLine, void *arg)
 {
@@ -21,19 +24,30 @@ void AddBufferFile(const std::string &strLine, void *arg)
 
 static void InitFileList(std::vector<IFile *> &filelist, const char *resource)
 {
-	//ReadFileFunc(resource,AddUnbufferFile,&filelist);
-	ReadFileFunc(resource,AddBufferFile,&filelist);
+	ReadFileFunc(resource,AddUnbufferFile,&filelist);
+	//ReadFileFunc(resource,AddBufferFile,&filelist);
+}
+
+//CMultiThreadReadTest test;
+CLimitReadTest test;
+
+void exit_signal_handler(int signal_no)
+{
+	test.Stop();
 }
 
 int main(int argc, char *argv[])
 {
-	CSingleThreadReadTest test;
+	system("echo 3 > /proc/sys/vm/drop_caches");
+
+	signal(SIGINT, exit_signal_handler);
+	
 	std::vector<IFile *> filelist;
 	InitFileList(filelist, argv[1]);
 	test.SetFileList(filelist);
 	if (argc > 2)
 	{
-		test.SetCount(atoi(argv[2]));
+		test.SetFileCount(atoi(argv[2]));
 	}
 	test.Run();
 	return 0;

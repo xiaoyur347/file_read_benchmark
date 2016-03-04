@@ -17,17 +17,23 @@ public:
 		return "multi";
 	}
 	void SetFileList(std::vector<IFile *> & filelist);
-	void Run();
-
 	void SetBlockSize(int blocksize);
-	void SetCount(int count);
+	void SetFileCount(int count);
+	void Run();
+	void Stop();
 private:
 	void ThreadRun(IFile *file);
+	void WaitStart();
+	void NotifyStart();
+	void WaitStop();
+	void NotifyStop();
+	
 	std::vector<IFile *> m_filelist;
-	std::vector<std::thread *> m_threadlist;
+	int m_filecount;
 	int m_blocksize;
-	int m_count;
-	bool m_bRunning;
+
+	std::vector<std::thread *> m_threadlist;
+	bool m_running;
 	CSizeBench m_bench;
 	std::mutex m_mutex;
 	std::condition_variable m_start_cond;
